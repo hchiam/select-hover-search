@@ -1,7 +1,7 @@
 # Select Hover Search
 
-Select text.
+**Select** text.
 
-Hover over an icon.
+**Hover** over an icon.
 
-Insta-search.
+**Search** instantly.
