@@ -1,13 +1,14 @@
 * {
     font-family: avenir, arial;
-    transition: 0.5s;
+    background: black;
+    transition: 0.25s;
 }
 
 html {
-    width: 400px;
-    height: 400px;
+    width: 123px;
 }
 
 body {
-    background: white;
+    background: black;
+    color: white;
 }

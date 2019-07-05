@@ -1,10 +1,12 @@
 {
-  "name": "Template Chrome Extension Name",
+  "name": "Select Hover Search",
   "version": "1.0.0",
-  "description": "Template Chrome extension description",
-  "permissions": [
-    "storage",
-    "unlimitedStorage"
+  "description": "Select. Hover. Search.",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["jquery.js", "brain.js"]
+    }
   ],
   "browser_action": {
     "default_popup": "structure.html",
