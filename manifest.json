@@ -2,6 +2,9 @@
   "name": "Select Hover Search",
   "version": "1.0.0",
   "description": "Select. Hover. Search.",
+  "permissions": [
+    "activeTab"
+  ],
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
