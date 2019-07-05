@@ -13,7 +13,7 @@ document.addEventListener("mouseup", function(event) {
   }
 
   if (selectedText.length > 100) {
-    alert('That text looks too long.');
+    console.log('That text looks too long.');
     return;
   }
   
@@ -87,6 +87,7 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
   }
   setTimeout(function() {
     removeQuadrantButtons();
+    isSearching = false;
   }, 500);
 }
 
@@ -144,11 +145,9 @@ function createQuadrantButton(quadrantToUse, mouseCoordinates, buttonText, selec
   button.onmouseover = function() {
     button.style.cssText += 'background: rgb(138, 209, 172);';
     if (!isSearching) {
+      isSearching = true;
       setTimeout(function() {
-        let popup = window.open(urlStart + selectedText);
-        $(popup.document).load(function() {
-            isSearching = false;
-        });
+        window.open(urlStart + selectedText);
       }, 100);
     }
   };
