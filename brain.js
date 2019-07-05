@@ -128,20 +128,10 @@ function createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine, sel
   let widthOfButton = 100;
   let relativeDistances = getRelativePosition(quadrantToUse, mouseCoordinates, distanceFromMouse, widthOfButton);
   let background = 'rgba(255, 255, 255, 0.75)';
-  let borderStyle = '5px solid rgb(200, 200, 200)';
-  let hoverBackground = 'rgb(150, 200, 150)';
+  let borderStyle = getBorderStyle(searchEngine);
+  let hoverBackground = getHoverBackground(searchEngine);
   left = relativeDistances[0];
   top = relativeDistances[1];
-  if (searchEngine == 'Google') {
-    borderStyle = '5px solid rgba(0, 255, 0, 0.75)';
-    hoverBackground = 'rgb(150, 200, 150)';
-  } else if (searchEngine == 'Wiktionary') {
-    borderStyle = '5px dashed rgba(255, 255, 255, 0.75)';
-    hoverBackground = 'rgb(200, 200, 200)';
-  } else if (searchEngine == 'ELI5 Reddit') {
-    borderStyle = '5px dotted rgba(255, 0, 0, 0.75)';
-    hoverBackground = 'rgb(200, 150, 150)';
-  }
   button.style.cssText = `
     all: initial;
     z-index: 9999;
@@ -209,4 +199,28 @@ function getRelativePosition(quadrantToUse, mouseCoordinates, distanceFromMouse,
       break;
   }
   return [left, top];
+}
+
+function getBorderStyle(searchEngine) {
+  let borderStyle = '5px solid rgb(200, 200, 200)';
+  if (searchEngine == 'Google') {
+    borderStyle = '5px solid rgba(0, 255, 0, 0.75)';
+  } else if (searchEngine == 'Wiktionary') {
+    borderStyle = '5px dashed rgba(255, 255, 255, 0.75)';
+  } else if (searchEngine == 'ELI5 Reddit') {
+    borderStyle = '5px dotted rgba(255, 0, 0, 0.75)';
+  }
+  return borderStyle;
+}
+
+function getHoverBackground(searchEngine) {
+  let hoverBackground = 'rgb(150, 200, 150)';
+  if (searchEngine == 'Google') {
+    hoverBackground = 'rgb(150, 200, 150)';
+  } else if (searchEngine == 'Wiktionary') {
+    hoverBackground = 'rgb(200, 200, 200)';
+  } else if (searchEngine == 'ELI5 Reddit') {
+    hoverBackground = 'rgb(200, 150, 150)';
+  }
+  return hoverBackground;
 }

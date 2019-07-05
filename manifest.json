@@ -1,16 +1,14 @@
 {
   "name": "Select Hover Search",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Select. Hover. Search.",
   "permissions": [
     "activeTab"
   ],
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["brain.js"]
-    }
-  ],
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["brain.js"]
+  }],
   "browser_action": {
     "default_popup": "structure.html",
     "default_icon": {
