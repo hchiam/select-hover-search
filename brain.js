@@ -1,7 +1,7 @@
 let isSearching = false;
 
 document.addEventListener("mouseup", function(event) {
-  let outerHTML = window.getSelection().anchorNode.outerHTML
+  let outerHTML = window.getSelection().anchorNode && window.getSelection().anchorNode.outerHTML;
   let isInput = (outerHTML && outerHTML.includes('<input'));
   if (isInput) {
     return;
@@ -16,7 +16,7 @@ document.addEventListener("mouseup", function(event) {
     console.log('That text looks too long.');
     return;
   }
-  
+
   let mouseQuadrant = getMouseQuadrant(event);
   let mouseCoordinates = getMouseCoordinates(event);
   showIcons(selectedText, mouseQuadrant, mouseCoordinates);
@@ -27,13 +27,13 @@ function getMouseQuadrant(event) {
   const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
   let left = event.clientX;
   let top = event.clientY;
-  if (left <= width/2 && top <= height/2) {
+  if (left <= width / 2 && top <= height / 2) {
     return 1;
-  } else if (left <= width/2 && top > height/2) {
+  } else if (left <= width / 2 && top > height / 2) {
     return 3;
-  } else if (left > width/2 && top <= height/2) {
+  } else if (left > width / 2 && top <= height / 2) {
     return 2;
-  } else if (left > width/2 && top > height/2) {
+  } else if (left > width / 2 && top > height / 2) {
     return 4;
   }
 }
@@ -50,38 +50,41 @@ function getMouseCoordinates(event) {
 function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
   removeQuadrantButtons();
   createBackground();
-  let searchEngineList = [
-    {
+  let searchEngineList = [{
       'searchEngine': 'Google',
       'urlStart': 'https://www.google.com/search?q='
     },
     {
       'searchEngine': 'Wiktionary',
       'urlStart': 'https://en.wiktionary.org/wiki/'
+    },
+    {
+      'searchEngine': 'ELI5 Reddit',
+      'urlStart': 'https://www.google.com/search?q=site:reddit.com "eli5" '
     }
   ];
   let searchEngineIndex = 0;
   let quadrantsToUse = [];
   let quadrantsToUseIndex = 0;
-  switch(mouseQuadrant) {
+  switch (mouseQuadrant) {
     case 1:
-      quadrantsToUse = [5,7,8];
+      quadrantsToUse = [5, 7, 8];
       break;
     case 2:
-      quadrantsToUse = [4,6,7];
+      quadrantsToUse = [4, 6, 7];
       break;
     case 3:
-      quadrantsToUse = [2,3,5];
+      quadrantsToUse = [2, 3, 5];
       break;
     case 4:
-      quadrantsToUse = [1,2,4];
+      quadrantsToUse = [1, 2, 4];
       break;
   }
   for (let i = 1; i <= 4 && searchEngineIndex < searchEngineList.length; i++) {
     let quadrantToUse = quadrantsToUse[quadrantsToUseIndex];
     let searchEngine = searchEngineList[searchEngineIndex].searchEngine;
     let urlStart = searchEngineList[searchEngineIndex].urlStart;
-    createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine + ': <br/><br/>', selectedText, urlStart);
+    createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine, selectedText, urlStart);
     searchEngineIndex++;
     quadrantsToUseIndex++;
   }
@@ -93,8 +96,8 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
 
 function removeQuadrantButtons() {
   var quadrantButtons = document.getElementsByClassName('select-hover-search-quadrants');
-  while (quadrantButtons.length>0) {
-      quadrantButtons[0].parentNode.removeChild(quadrantButtons[0]);
+  while (quadrantButtons.length > 0) {
+    quadrantButtons[0].parentNode.removeChild(quadrantButtons[0]);
   }
 }
 
@@ -114,18 +117,31 @@ function createBackground() {
   document.body.appendChild(div);
 }
 
-function createQuadrantButton(quadrantToUse, mouseCoordinates, buttonText, selectedText, urlStart) {
+function createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine, selectedText, urlStart) {
   let button = document.createElement('button');
   button.id = 'select-hover-search-quadrant-' + quadrantToUse;
   button.className = 'select-hover-search-quadrants';
-  button.innerHTML = buttonText + '<span style="font-size: medium;">' + selectedText + '</span>';
+  button.innerHTML = searchEngine + ': <br/><br/><span style="font-size: medium;">' + selectedText + '</span>';
   let left = 0;
   let top = 0;
   let distanceFromMouse = 150;
   let widthOfButton = 100;
   let relativeDistances = getRelativePosition(quadrantToUse, mouseCoordinates, distanceFromMouse, widthOfButton);
+  let background = 'rgba(255, 255, 255, 0.75)';
+  let borderStyle = '5px solid rgb(200, 200, 200)';
+  let hoverBackground = 'rgb(150, 200, 150)';
   left = relativeDistances[0];
   top = relativeDistances[1];
+  if (searchEngine == 'Google') {
+    borderStyle = '5px solid rgba(0, 255, 0, 0.75)';
+    hoverBackground = 'rgb(150, 200, 150)';
+  } else if (searchEngine == 'Wiktionary') {
+    borderStyle = '5px dashed rgba(255, 255, 255, 0.75)';
+    hoverBackground = 'rgb(200, 200, 200)';
+  } else if (searchEngine == 'ELI5 Reddit') {
+    borderStyle = '5px dotted rgba(255, 0, 0, 0.75)';
+    hoverBackground = 'rgb(200, 150, 150)';
+  }
   button.style.cssText = `
     all: initial;
     z-index: 9999;
@@ -136,14 +152,15 @@ function createQuadrantButton(quadrantToUse, mouseCoordinates, buttonText, selec
     height: ${widthOfButton}px;
     border-radius: 20px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.75);
+    background: ${background};
+    border: ${borderStyle};
     font-family: avenir, arial;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   `;
   button.onmouseover = function() {
-    button.style.cssText += 'background: rgb(138, 209, 172);';
+    button.style.cssText += `background: ${hoverBackground}; border: ${borderStyle};`;
     if (!isSearching) {
       isSearching = true;
       setTimeout(function() {
@@ -157,38 +174,38 @@ function createQuadrantButton(quadrantToUse, mouseCoordinates, buttonText, selec
 function getRelativePosition(quadrantToUse, mouseCoordinates, distanceFromMouse, widthOfButton) {
   let left = 0;
   let top = 0;
-  switch(quadrantToUse) {
+  switch (quadrantToUse) {
     case 1:
-      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton / 2;
       break;
     case 2:
-      left = mouseCoordinates[0] - widthOfButton/2;
-      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] - widthOfButton / 2;
+      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton / 2;
       break;
     case 3:
-      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] - distanceFromMouse - widthOfButton / 2;
       break;
     case 4:
-      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] - widthOfButton/2;
+      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] - widthOfButton / 2;
       break;
     case 5:
-      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] - widthOfButton/2;
+      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] - widthOfButton / 2;
       break;
     case 6:
-      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] - distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton / 2;
       break;
     case 7:
-      left = mouseCoordinates[0] - widthOfButton/2;
-      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] - widthOfButton / 2;
+      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton / 2;
       break;
     case 8:
-      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton/2;
-      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton/2;
+      left = mouseCoordinates[0] + distanceFromMouse - widthOfButton / 2;
+      top = mouseCoordinates[1] + distanceFromMouse - widthOfButton / 2;
       break;
   }
   return [left, top];
