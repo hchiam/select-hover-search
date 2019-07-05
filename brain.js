@@ -1,14 +1,22 @@
 let isSearching = false;
 
 document.addEventListener("mouseup", function(event) {
+  let outerHTML = window.getSelection().anchorNode.outerHTML
+  let isInput = (outerHTML && outerHTML.includes('<input'));
+  if (isInput) {
+    return;
+  }
+
   let selectedText = String(window.getSelection());
   if (!selectedText.trim()) {
     return;
   }
+
   if (selectedText.length > 100) {
     alert('That text looks too long.');
     return;
   }
+  
   let mouseQuadrant = getMouseQuadrant(event);
   let mouseCoordinates = getMouseCoordinates(event);
   showIcons(selectedText, mouseQuadrant, mouseCoordinates);
