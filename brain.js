@@ -2,8 +2,8 @@ let isSearching = false;
 
 document.addEventListener("mouseup", function(event) {
   let outerHTML = window.getSelection().anchorNode && window.getSelection().anchorNode.outerHTML;
-  let isInput = (outerHTML && outerHTML.includes('<input'));
-  if (isInput) {
+  let isInputOrTextArea = (outerHTML && (outerHTML.includes('<input') || outerHTML.includes('<textarea')));
+  if (isInputOrTextArea) {
     return;
   }
 
