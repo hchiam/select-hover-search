@@ -1,4 +1,11 @@
 let isSearching = false;
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener("mousemove", function(event) {
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+});
 
 document.addEventListener("mouseup", function(event) {
   let outerHTML = window.getSelection().anchorNode && window.getSelection().anchorNode.outerHTML;
@@ -19,7 +26,13 @@ document.addEventListener("mouseup", function(event) {
 
   let mouseQuadrant = getMouseQuadrant(event);
   let mouseCoordinates = getMouseCoordinates(event);
-  showIcons(selectedText, mouseQuadrant, mouseCoordinates);
+
+  setTimeout(function() {
+    let userWaitedForIcons = (mouseX === mouseCoordinates[0]) && (mouseY === mouseCoordinates[1]);
+    if (userWaitedForIcons) {
+      showIcons(selectedText, mouseQuadrant, mouseCoordinates);
+    }
+  }, 500);
 });
 
 function getMouseQuadrant(event) {
