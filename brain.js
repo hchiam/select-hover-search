@@ -19,8 +19,8 @@ document.addEventListener("mouseup", function(event) {
     return;
   }
 
-  if (selectedText.length > 100) {
-    console.log('That text looks too long.');
+  let selectedTextTooLong = (selectedText.length > 100);
+  if (selectedTextTooLong) {
     return;
   }
 
