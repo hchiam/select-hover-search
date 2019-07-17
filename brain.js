@@ -27,12 +27,7 @@ document.addEventListener("mouseup", function(event) {
   let mouseQuadrant = getMouseQuadrant(event);
   let mouseCoordinates = getMouseCoordinates(event);
 
-  setTimeout(function() {
-    let userWaitedForIcons = (mouseX === mouseCoordinates[0]) && (mouseY === mouseCoordinates[1]);
-    if (userWaitedForIcons) {
-      showIcons(selectedText, mouseQuadrant, mouseCoordinates);
-    }
-  }, 500);
+  showIcons(selectedText, mouseQuadrant, mouseCoordinates);
 });
 
 function getMouseQuadrant(event) {
@@ -104,7 +99,7 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
   setTimeout(function() {
     removeQuadrantButtons();
     isSearching = false;
-  }, 1000);
+  }, 900);
 }
 
 function removeQuadrantButtons() {
