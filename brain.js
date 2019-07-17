@@ -32,7 +32,7 @@ document.addEventListener("mouseup", function(event) {
     if (userWaitedForIcons) {
       showIcons(selectedText, mouseQuadrant, mouseCoordinates);
     }
-  }, 500);
+  }, 1000);
 });
 
 function getMouseQuadrant(event) {
