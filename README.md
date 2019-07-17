@@ -1,10 +1,12 @@
-# Select Hover Search
+# Select → Hover → Search
 
-**Select** text.
+Three steps:
 
-**Hover** over an icon.
+1) **Select** text.
 
-**Search** instantly.
+2) **Hover** over a search tool.
+
+3) **Search** instantly.
 
 Bigger goal: Get explanations faster, learn faster.
 
