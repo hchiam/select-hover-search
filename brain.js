@@ -32,7 +32,7 @@ document.addEventListener("mouseup", function(event) {
     if (userWaitedForIcons) {
       showIcons(selectedText, mouseQuadrant, mouseCoordinates);
     }
-  }, 1000);
+  }, 500);
 });
 
 function getMouseQuadrant(event) {
@@ -104,7 +104,7 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
   setTimeout(function() {
     removeQuadrantButtons();
     isSearching = false;
-  }, 500);
+  }, 1000);
 }
 
 function removeQuadrantButtons() {
