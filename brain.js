@@ -1,6 +1,9 @@
+(function() {
+
 let isSearching = false;
 let mouseX = 0;
 let mouseY = 0;
+let timer;
 
 document.addEventListener("mousemove", function(event) {
   mouseX = event.clientX;
@@ -67,27 +70,32 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
       'urlStart': 'https://en.wiktionary.org/wiki/'
     },
     {
-      'searchEngine': 'ELI5 Reddit',
+      'searchEngine': 'Reddit ELI5',
       'urlStart': 'https://www.google.com/search?q=site:reddit.com "eli5" '
+    },
+    {
+      'searchEngine': '(exit)',
+      'urlStart': ''
     }
   ];
   let searchEngineIndex = 0;
   let quadrantsToUse = [];
   let quadrantsToUseIndex = 0;
-  switch (mouseQuadrant) {
-    case 1:
-      quadrantsToUse = [5, 7, 8];
-      break;
-    case 2:
-      quadrantsToUse = [4, 6, 7];
-      break;
-    case 3:
-      quadrantsToUse = [2, 3, 5];
-      break;
-    case 4:
-      quadrantsToUse = [1, 2, 4];
-      break;
-  }
+  quadrantsToUse = [4, 6, 7, 5];
+  // switch (mouseQuadrant) {
+  //   case 1:
+  //     quadrantsToUse = [5, 7, 8, 1];
+  //     break;
+  //   case 2:
+  //     quadrantsToUse = [4, 6, 7, 3];
+  //     break;
+  //   case 3:
+  //     quadrantsToUse = [2, 3, 5, 6];
+  //     break;
+  //   case 4:
+  //     quadrantsToUse = [1, 2, 4, 8];
+  //     break;
+  // }
   for (let i = 1; i <= 4 && searchEngineIndex < searchEngineList.length; i++) {
     let quadrantToUse = quadrantsToUse[quadrantsToUseIndex];
     let searchEngine = searchEngineList[searchEngineIndex].searchEngine;
@@ -96,10 +104,11 @@ function showIcons(selectedText, mouseQuadrant, mouseCoordinates) {
     searchEngineIndex++;
     quadrantsToUseIndex++;
   }
-  setTimeout(function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
     removeQuadrantButtons();
     isSearching = false;
-  }, 900);
+  }, 1000);
 }
 
 function removeQuadrantButtons() {
@@ -126,18 +135,23 @@ function createBackground() {
 }
 
 function createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine, selectedText, urlStart) {
+  let isExitIcon = (searchEngine === '(exit)');
   let button = document.createElement('button');
   button.id = 'select-hover-search-quadrant-' + quadrantToUse;
   button.className = 'select-hover-search-quadrants';
-  button.innerHTML = searchEngine + ': <br/><br/><span style="font-size: medium;">' + selectedText + '</span>';
+  if (isExitIcon) {
+    button.innerHTML = searchEngine;
+  } else {
+    button.innerHTML = searchEngine + ':' + '<br/><br/><span style="font-size: medium;">' + selectedText + '</span>';
+  }
   let left = 0;
   let top = 0;
   let distanceFromMouse = 150;
   let widthOfButton = 100;
   let relativeDistances = getRelativePosition(quadrantToUse, mouseCoordinates, distanceFromMouse, widthOfButton);
-  let background = 'rgba(255, 255, 255, 0.75)';
+  let background = getBackground(searchEngine);
   let borderStyle = getBorderStyle(searchEngine);
-  let hoverBackground = getHoverBackground(searchEngine);
+  let hoverBackground = 'rgba(255, 255, 255, 0.75)';
   left = relativeDistances[0];
   top = relativeDistances[1];
   button.style.cssText = `
@@ -161,9 +175,10 @@ function createQuadrantButton(quadrantToUse, mouseCoordinates, searchEngine, sel
     button.style.cssText += `background: ${hoverBackground}; border: ${borderStyle};`;
     if (!isSearching) {
       isSearching = true;
-      setTimeout(function() {
+      if (urlStart) {
         window.open(urlStart + selectedText);
-      }, 100);
+      }
+      removeQuadrantButtons();
     }
   };
   document.body.appendChild(button);
@@ -214,21 +229,27 @@ function getBorderStyle(searchEngine) {
   if (searchEngine == 'Google') {
     borderStyle = '5px solid rgba(0, 255, 0, 0.75)';
   } else if (searchEngine == 'Wiktionary') {
-    borderStyle = '5px dashed rgba(255, 255, 255, 0.75)';
-  } else if (searchEngine == 'ELI5 Reddit') {
-    borderStyle = '5px dotted rgba(255, 0, 0, 0.75)';
+    borderStyle = '5px solid rgba(255, 255, 255, 0.75)';
+  } else if (searchEngine == 'Reddit ELI5') {
+    borderStyle = '5px solid rgba(255, 0, 0, 0.75)';
+  } else {
+    borderStyle = '5px dashed rgba(0, 0, 255, 0.75)';
   }
   return borderStyle;
 }
 
-function getHoverBackground(searchEngine) {
-  let hoverBackground = 'rgb(150, 200, 150)';
+function getBackground(searchEngine) {
+  let background = 'rgb(150, 200, 150)';
   if (searchEngine == 'Google') {
-    hoverBackground = 'rgb(150, 200, 150)';
+    background = 'rgb(150, 200, 150)';
   } else if (searchEngine == 'Wiktionary') {
-    hoverBackground = 'rgb(200, 200, 200)';
-  } else if (searchEngine == 'ELI5 Reddit') {
-    hoverBackground = 'rgb(200, 150, 150)';
+    background = 'rgb(200, 200, 200)';
+  } else if (searchEngine == 'Reddit ELI5') {
+    background = 'rgb(200, 150, 150)';
+  } else {
+    background = 'rgb(150, 150, 200)';
   }
-  return hoverBackground;
+  return background;
 }
+
+})();
