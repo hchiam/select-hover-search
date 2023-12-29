@@ -25,3 +25,12 @@ In `.bash_profile`:
 ```sh
 alias zipup='zip -r ${PWD##*/}.zip * -x *.zip -x .husky/* -x node_modules/* -x ".github/*" -x .eslintignore -x .eslintrc.js -x .gitignore -x .travis.yml -x CODEOWNERS -x contributing.md; echo; echo "created ${PWD##*/}.zip inside this folder"; echo;'
 ```
+
+Then in terminal:
+
+```sh
+cd select-hover-search
+zipup
+```
+
+Now you have the .zip file you need to upload to the Chrome Web Store.
